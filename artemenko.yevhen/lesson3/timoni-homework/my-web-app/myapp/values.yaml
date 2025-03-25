@@ -1,0 +1,31 @@
+values:
+  image: 
+    repository: "nginx"
+    tag: "latest"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  service:
+    port: 80
+  replicas: 2
+  env:
+  - name: "ENV"
+    value: "production"
+  configmap:
+    data:
+      key: "value"
+      key2: "value2"
+  kafkatopic:
+    enabled: true
+    partitions: 3
+    replicas: 2
+    config:
+      key: "value"
+      key2: "value2"
+  serviceMonitor:
+    enabled: true
+    

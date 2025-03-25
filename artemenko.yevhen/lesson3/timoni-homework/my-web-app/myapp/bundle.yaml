@@ -1,0 +1,18 @@
+bundle:
+  apiVersion: v1alpha1
+  name: webapp
+  instances:
+    prod:
+      namespace: timoni
+      module: 
+        url: file://../myapp
+        version: 0.1.0
+      values:
+        replicas: 3
+    stage:
+      namespace: web-staging
+      module: 
+        url: file://../myapp
+        version: 0.1.0
+      values:
+        replicas: 1
