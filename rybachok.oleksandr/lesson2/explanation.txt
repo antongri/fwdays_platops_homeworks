@@ -1,0 +1,9 @@
+1. The reconiliation loop works by taking the update time interval and:
+- checking if controlled resource exsists (create if not)
+- checking the changes in given Custom Resource (ConfigSync)
+- apply changes according to input CR if there are differences between target and CR
+- remove target if CR is deleted
+
+2. The error conditions could be handled by checking the logs of the controller/operator pod. Usually this is due to lack of permissions or issues with the kubernetes.
+
+3. No major issues were faced. My first try was without the changes for the role, I forgot to add access to the configmap resource. Found that issue in controller pod logs, added relevant string to the controller go code.

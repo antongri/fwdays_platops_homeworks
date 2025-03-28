@@ -1,0 +1,316 @@
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> make docker-build IMG=config-operator:v1
+docker build -t config-operator:v1 .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+
+Sending build context to Docker daemon  176.6kB
+Step 1/16 : FROM docker.io/golang:1.23 AS builder
+1.23: Pulling from library/golang
+545aa82ec479: Pulling fs layer
+4378a6c11dea: Pulling fs layer
+140d15be2fea: Pulling fs layer
+81c7d0b299d2: Pulling fs layer
+b40fc9e46828: Pulling fs layer
+0cd9bb480606: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+b40fc9e46828: Waiting
+0cd9bb480606: Waiting
+4f4fb700ef54: Waiting
+81c7d0b299d2: Waiting
+4378a6c11dea: Verifying Checksum
+4378a6c11dea: Download complete
+545aa82ec479: Verifying Checksum
+545aa82ec479: Download complete
+545aa82ec479: Pull complete
+4378a6c11dea: Pull complete
+140d15be2fea: Verifying Checksum
+140d15be2fea: Download complete
+0cd9bb480606: Verifying Checksum
+0cd9bb480606: Download complete
+4f4fb700ef54: Verifying Checksum
+4f4fb700ef54: Download complete
+140d15be2fea: Pull complete
+81c7d0b299d2: Verifying Checksum
+81c7d0b299d2: Download complete
+b40fc9e46828: Verifying Checksum
+b40fc9e46828: Download complete
+81c7d0b299d2: Pull complete
+b40fc9e46828: Pull complete
+0cd9bb480606: Pull complete
+4f4fb700ef54: Pull complete
+Digest: sha256:cb45cf739cf6bc9eaeacf75d3cd7c157e7d39b757216d813d8115d026ee32e75
+Status: Downloaded newer image for golang:1.23
+ ---> f572d9528c63
+Step 2/16 : ARG TARGETOS
+ ---> Running in e27d90358287
+ ---> Removed intermediate container e27d90358287
+ ---> 25e68810ae5a
+Step 3/16 : ARG TARGETARCH
+ ---> Running in 0f1a13e0a643
+ ---> Removed intermediate container 0f1a13e0a643
+ ---> 618aa7751880
+Step 4/16 : WORKDIR /workspace
+ ---> Running in e245f07a603e
+ ---> Removed intermediate container e245f07a603e
+ ---> 55f3031cd427
+Step 5/16 : COPY go.mod go.mod
+ ---> d6a3dda4b66e
+Step 6/16 : COPY go.sum go.sum
+ ---> cda9b9482dbe
+Step 7/16 : RUN go mod download
+ ---> Running in 0d220d2fb543
+ ---> Removed intermediate container 0d220d2fb543
+ ---> 442322035245
+Step 8/16 : COPY cmd/main.go cmd/main.go
+ ---> 88d975ccc567
+Step 9/16 : COPY api/ api/
+ ---> 40d656a29924
+Step 10/16 : COPY internal/ internal/
+ ---> 520303fa6fc0
+Step 11/16 : RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o manager cmd/main.go
+ ---> Running in 06bc0b1c25bd
+ ---> Removed intermediate container 06bc0b1c25bd
+ ---> ec82786caa50
+Step 12/16 : FROM gcr.io/distroless/static:nonroot
+nonroot: Pulling from distroless/static
+829b2cab8fc5: Pulling fs layer
+bfb59b82a9b6: Pulling fs layer
+0b1f95f08c81: Pulling fs layer
+a62778643d56: Pulling fs layer
+7c12895b777b: Pulling fs layer
+3214acf345c0: Pulling fs layer
+5664b15f108b: Pulling fs layer
+0bab15eea81d: Pulling fs layer
+4aa0ea1413d3: Pulling fs layer
+da7816fa955e: Pulling fs layer
+9aee425378d2: Pulling fs layer
+5664b15f108b: Waiting
+0bab15eea81d: Waiting
+4aa0ea1413d3: Waiting
+da7816fa955e: Waiting
+9aee425378d2: Waiting
+a62778643d56: Waiting
+7c12895b777b: Waiting
+3214acf345c0: Waiting
+bfb59b82a9b6: Verifying Checksum
+bfb59b82a9b6: Download complete
+0b1f95f08c81: Verifying Checksum
+0b1f95f08c81: Download complete
+a62778643d56: Verifying Checksum
+a62778643d56: Download complete
+829b2cab8fc5: Verifying Checksum
+829b2cab8fc5: Pull complete
+bfb59b82a9b6: Pull complete
+7c12895b777b: Verifying Checksum
+7c12895b777b: Download complete
+0b1f95f08c81: Pull complete
+a62778643d56: Pull complete
+7c12895b777b: Pull complete
+3214acf345c0: Verifying Checksum
+3214acf345c0: Pull complete
+5664b15f108b: Verifying Checksum
+5664b15f108b: Download complete
+5664b15f108b: Pull complete
+0bab15eea81d: Download complete
+0bab15eea81d: Pull complete
+4aa0ea1413d3: Download complete
+da7816fa955e: Verifying Checksum
+da7816fa955e: Download complete
+4aa0ea1413d3: Pull complete
+da7816fa955e: Pull complete
+9aee425378d2: Verifying Checksum
+9aee425378d2: Download complete
+9aee425378d2: Pull complete
+Digest: sha256:b35229a3a6398fe8f86138c74c611e386f128c20378354fc5442811700d5600d
+Status: Downloaded newer image for gcr.io/distroless/static:nonroot
+ ---> 6d6e11a1459d
+Step 13/16 : WORKDIR /
+ ---> Running in 1bd10b0e96b7
+ ---> Removed intermediate container 1bd10b0e96b7
+ ---> ee13179f8a6c
+Step 14/16 : COPY --from=builder /workspace/manager .
+ ---> eed8e85ca3a8
+Step 15/16 : USER 65532:65532
+ ---> Running in 2eca06fbb82d
+ ---> Removed intermediate container 2eca06fbb82d
+ ---> f4549b6a9916
+Step 16/16 : ENTRYPOINT ["/manager"]
+ ---> Running in a6e73391fd43
+ ---> Removed intermediate container a6e73391fd43
+ ---> a8b2584594db
+Successfully built a8b2584594db
+Successfully tagged config-operator:v1
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> kind load docker-image config-operator:v1 --name kubebuilder-demo
+Image: "config-operator:v1" with ID "sha256:a8b2584594db4131dbbd33967ca022866111fda6f1a1c9de0ab412e1b0bb6eb0" not yet present on node "kubebuilder-demo-control-plane", loading...
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> make deploy IMG=config-operator:v1
+/Users/orybachok/gdrive/Courses/PE_crash_course/HW2/config-operator/bin/controller-gen rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+Downloading sigs.k8s.io/kustomize/kustomize/v5@v5.6.0
+go: downloading sigs.k8s.io/kustomize/kustomize/v5 v5.6.0
+go: downloading sigs.k8s.io/kustomize/kyaml v0.19.0
+go: downloading sigs.k8s.io/kustomize/api v0.19.0
+go: downloading sigs.k8s.io/kustomize/cmd/config v0.19.0
+go: downloading github.com/spf13/cobra v1.8.0
+go: downloading github.com/go-errors/errors v1.4.2
+go: downloading k8s.io/kube-openapi v0.0.0-20241212222426-2c72e554b1e7
+go: downloading github.com/sergi/go-diff v1.2.0
+go: downloading github.com/davecgh/go-spew v1.1.1
+go: downloading github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00
+go: downloading github.com/xlab/treeprint v1.2.0
+go: downloading github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
+go: downloading github.com/google/gnostic-models v0.6.9
+cd config/manager && /Users/orybachok/gdrive/Courses/PE_crash_course/HW2/config-operator/bin/kustomize edit set image controller=config-operator:v1
+/Users/orybachok/gdrive/Courses/PE_crash_course/HW2/config-operator/bin/kustomize build config/default | kubectl apply -f -
+namespace/config-operator-system created
+customresourcedefinition.apiextensions.k8s.io/configsyncs.apps.example.com created
+serviceaccount/config-operator-controller-manager created
+role.rbac.authorization.k8s.io/config-operator-leader-election-role created
+clusterrole.rbac.authorization.k8s.io/config-operator-configsync-admin-role created
+clusterrole.rbac.authorization.k8s.io/config-operator-configsync-editor-role created
+clusterrole.rbac.authorization.k8s.io/config-operator-configsync-viewer-role created
+clusterrole.rbac.authorization.k8s.io/config-operator-manager-role created
+clusterrole.rbac.authorization.k8s.io/config-operator-metrics-auth-role created
+clusterrole.rbac.authorization.k8s.io/config-operator-metrics-reader created
+rolebinding.rbac.authorization.k8s.io/config-operator-leader-election-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/config-operator-manager-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/config-operator-metrics-auth-rolebinding created
+service/config-operator-controller-manager-metrics-service created
+deployment.apps/config-operator-controller-manager created
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> kubectl -n config-operator-system get po
+NAME                                                 READY   STATUS    RESTARTS   AGE
+config-operator-controller-manager-57b4bc6c7-klk52   1/1     Running   0          13s
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> kubectl -n config-operator-system logs config-operator-controller-manager-57b4bc6c7-klk52 -f
+2025-03-28T13:03:23Z	INFO	setup	starting manager
+2025-03-28T13:03:23Z	INFO	starting server	{"name": "health probe", "addr": "[::]:8081"}
+I0328 13:03:23.037659       1 leaderelection.go:257] attempting to acquire leader lease config-operator-system/415e724c.example.com...
+2025-03-28T13:03:23Z	INFO	controller-runtime.metrics	Starting metrics server
+2025-03-28T13:03:23Z	INFO	setup	disabling http/2
+I0328 13:03:23.049001       1 leaderelection.go:271] successfully acquired lease config-operator-system/415e724c.example.com
+2025-03-28T13:03:23Z	DEBUG	events	config-operator-controller-manager-57b4bc6c7-klk52_d28d92e5-ee45-43d9-a5c3-69b74c528d76 became leader	{"type": "Normal", "object": {"kind":"Lease","namespace":"config-operator-system","name":"415e724c.example.com","uid":"ef3eb5e3-2d13-41eb-b176-c49b32c97590","apiVersion":"coordination.k8s.io/v1","resourceVersion":"3047"}, "reason": "LeaderElection"}
+2025-03-28T13:03:23Z	INFO	Starting EventSource	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync", "source": "kind source: *v1.ConfigMap"}
+2025-03-28T13:03:23Z	INFO	Starting EventSource	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync", "source": "kind source: *v1.ConfigSync"}
+2025-03-28T13:03:23Z	INFO	Starting Controller	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync"}
+2025-03-28T13:03:23Z	INFO	Starting workers	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync", "worker count": 1}
+2025-03-28T13:03:23Z	INFO	controller-runtime.metrics	Serving metrics server	{"bindAddress": ":8443", "secure": true}
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator [SIGINT]> kubectl apply -f config/samples/apps_v1_configsync.yaml                                                                                                                                             orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator [SIGINT]> kubectl apply -f config/samples/apps_v1_configsync.yaml
+configsync.apps.example.com/configsync-sample created
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> kubectl get configmap my-config -o yaml
+apiVersion: v1
+data:
+  app.properties: |
+    app.name=MyApp
+    app.version=1.0.0
+  key1: value1
+  key2: value2
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2025-03-28T13:12:06Z"
+  name: my-config
+  namespace: default
+  resourceVersion: "3998"
+  uid: b06053d9-93c2-4117-8548-38c39cedd6ea
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> kubectl -n config-operator-system logs config-operator-controller-manager-57b4bc6c7-klk52 -f
+2025-03-28T13:03:23Z	INFO	setup	starting manager
+2025-03-28T13:03:23Z	INFO	starting server	{"name": "health probe", "addr": "[::]:8081"}
+I0328 13:03:23.037659       1 leaderelection.go:257] attempting to acquire leader lease config-operator-system/415e724c.example.com...
+2025-03-28T13:03:23Z	INFO	controller-runtime.metrics	Starting metrics server
+2025-03-28T13:03:23Z	INFO	setup	disabling http/2
+I0328 13:03:23.049001       1 leaderelection.go:271] successfully acquired lease config-operator-system/415e724c.example.com
+2025-03-28T13:03:23Z	DEBUG	events	config-operator-controller-manager-57b4bc6c7-klk52_d28d92e5-ee45-43d9-a5c3-69b74c528d76 became leader	{"type": "Normal", "object": {"kind":"Lease","namespace":"config-operator-system","name":"415e724c.example.com","uid":"ef3eb5e3-2d13-41eb-b176-c49b32c97590","apiVersion":"coordination.k8s.io/v1","resourceVersion":"3047"}, "reason": "LeaderElection"}
+2025-03-28T13:03:23Z	INFO	Starting EventSource	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync", "source": "kind source: *v1.ConfigMap"}
+2025-03-28T13:03:23Z	INFO	Starting EventSource	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync", "source": "kind source: *v1.ConfigSync"}
+2025-03-28T13:03:23Z	INFO	Starting Controller	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync"}
+2025-03-28T13:03:23Z	INFO	Starting workers	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync", "worker count": 1}
+2025-03-28T13:03:23Z	INFO	controller-runtime.metrics	Serving metrics server	{"bindAddress": ":8443", "secure": true}
+2025-03-28T13:12:06Z	INFO	Created ConfigMap	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync", "ConfigSync": {"name":"configsync-sample","namespace":"default"}, "namespace": "default", "name": "configsync-sample", "reconcileID": "45434f54-ca6f-4a0b-ae7f-4d1b2cf567fc", "ConfigMap.Name": "my-config"}
+2025-03-28T13:12:06Z	INFO	Updated ConfigMap	{"controller": "configsync", "controllerGroup": "apps.example.com", "controllerKind": "ConfigSync", "ConfigSync": {"name":"configsync-sample","namespace":"default"}, "namespace": "default", "name": "configsync-sample", "reconcileID": "c4259042-9cd8-4de9-98d9-c617adf0e152", "ConfigMap.Name": "my-config"}
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator [SIGINT]> kubectl get configsync configsync-sample -o yaml                                                                                                                                           orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator [SIGINT]> kubectl get configsync configsync-sample -o yaml
+apiVersion: apps.example.com/v1
+kind: ConfigSync
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps.example.com/v1","kind":"ConfigSync","metadata":{"annotations":{},"name":"configsync-sample","namespace":"default"},"spec":{"configMapName":"my-config","data":{"app.properties":"app.name=MyApp\napp.version=1.0.0\n","key1":"value1","key2":"value2"},"updateInterval":30}}
+  creationTimestamp: "2025-03-28T13:12:06Z"
+  generation: 1
+  name: configsync-sample
+  namespace: default
+  resourceVersion: "4055"
+  uid: 01ed401b-0ac0-4cc4-bdba-5223655d3c63
+spec:
+  configMapName: my-config
+  data:
+    app.properties: |
+      app.name=MyApp
+      app.version=1.0.0
+    key1: value1
+    key2: value2
+  updateInterval: 30
+status:
+  lastSyncTime: "2025-03-28T13:12:36Z"
+  status: Synced
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> kubectl edit configsync configsync-sample
+configsync.apps.example.com/configsync-sample edited
+
+
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> kubectl get configmap my-config -o yaml
+apiVersion: v1
+data:
+  app.properties: |
+    app.name=MyApp2
+    app.version=1.0.1
+  key1: value3
+  key2: value4
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2025-03-28T13:12:06Z"
+  name: my-config
+  namespace: default
+  resourceVersion: "4168"
+  uid: b06053d9-93c2-4117-8548-38c39cedd6ea
+
+  
+orybachok@m-orybacho-0LXF ~/g/C/P/H/config-operator> kubectl get configsync configsync-sample -o yaml
+apiVersion: apps.example.com/v1
+kind: ConfigSync
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps.example.com/v1","kind":"ConfigSync","metadata":{"annotations":{},"name":"configsync-sample","namespace":"default"},"spec":{"configMapName":"my-config","data":{"app.properties":"app.name=MyApp\napp.version=1.0.0\n","key1":"value1","key2":"value2"},"updateInterval":30}}
+  creationTimestamp: "2025-03-28T13:12:06Z"
+  generation: 2
+  name: configsync-sample
+  namespace: default
+  resourceVersion: "4169"
+  uid: 01ed401b-0ac0-4cc4-bdba-5223655d3c63
+spec:
+  configMapName: my-config
+  data:
+    app.properties: |
+      app.name=MyApp2
+      app.version=1.0.1
+    key1: value3
+    key2: value4
+  updateInterval: 30
+status:
+  lastSyncTime: "2025-03-28T13:13:38Z"
+  status: Synced 
