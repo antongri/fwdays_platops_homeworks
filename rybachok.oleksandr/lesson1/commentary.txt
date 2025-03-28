@@ -1,0 +1,1 @@
+Everything went well and smoothly. There were several issues with the local env, like running docker as local users, but it was solved quickly, like adding a user to the "docker" group. The listing of the created IAM roles failed, with "the region should be specified" error. However, I added all exports. Solved easily with the "--region" option provided to the "aws" binary.
